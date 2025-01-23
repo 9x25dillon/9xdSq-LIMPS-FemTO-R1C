@@ -24,6 +24,16 @@ result = sql_engine.generate(
     precision="float32",
     use_gpu=True
 )
+```yaml
+# metrics.yaml
+task: text2sql
+dataset: Spider
+metrics:
+  - name: Execution Accuracy
+    value: 82.1%
+  - name: Latency
+    value: 320ms
+```
 
 print(result.sql_query)
 # OUTPUT: 
