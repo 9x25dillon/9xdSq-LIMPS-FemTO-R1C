@@ -1,3 +1,43 @@
+---
+license: apache-2.0
+language:
+- en
+base_model:
+- deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
+- deepseek-ai/DeepSeek-R1-Zero
+- satyaalmasian/temporal_tagger_BERT_tokenclassifier
+- simoneprete/mbert-lstm-sentiment-analysis
+- yifeihu/TFT-ID-1.0
+- mradermacher/Llama-3-70b-Arimas-story-RP-V2.0-i1-GGUF
+tags:
+- finance
+- code
+- moe
+- legal
+- merge
+datasets:
+- cfahlgren1/react-code-instructions
+- nebius/SWE-agent-trajectories
+- JanosAudran/financial-reports-sec
+- TokenBender/code_instructions_122k_alpaca_style
+- O1-OPEN/OpenO1-SFT
+- imperial-cpg/copyright-traps-extra-non-members
+- maddyrucos/code_vulnerability_python
+- cmu-lti/agents_vs_script
+- generative-technologies/synth-ehr-icd10-llama3-format
+- MU-NLPC/Calc-ape210k_selftrain_experiment_balanced
+- ergotts/propositional-logic
+- ieeeeeH/TrafficDataSetExtraction
+- Lajavaness/IEEE-118-overload-test
+- sentence-transformers/embedding-training-data
+- orivera2280/Robocryst-GNN-data
+- rishi1entirerbb/inswapper_128.onnx
+metrics:
+- code_eval
+- accuracy
+new_version: 9x25dillon/IMPS-SQL-DS-FEMTO-R1C
+library_name: adapter-transformers
+---
 ```bash
 # Base requirements
 pip install torch==2.1.0 --index-url https://download.pytorch.org/whl/cu118
