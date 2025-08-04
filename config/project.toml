@@ -1,0 +1,26 @@
+# Unified LIMPS Configuration
+[project]
+name = "unified-limps"
+version = "1.0.0"
+description = "Unified Language-Integrated Matrix Processing System"
+authors = ["9x25dillon"]
+
+[limps]
+core_modules = ["polynomials", "matrices", "entropy", "api"]
+default_precision = "float64"
+gpu_enabled = true
+julia_backend = true
+
+[matrix_processing]
+default_optimization = "sparsity"
+gpu_acceleration = true
+validation_enabled = true
+
+[api]
+default_port = 8000
+cors_enabled = true
+rate_limiting = true
+
+[logging]
+level = "INFO"
+format = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

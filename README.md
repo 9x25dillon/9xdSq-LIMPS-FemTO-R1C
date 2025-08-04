@@ -1,186 +1,96 @@
----
-license: apache-2.0
-language:
-- en
-base_model:
-- deepseek-ai/DeepSeek-R1-Distill-Qwen-32B
-- deepseek-ai/DeepSeek-R1-Zero
-- satyaalmasian/temporal_tagger_BERT_tokenclassifier
-- simoneprete/mbert-lstm-sentiment-analysis
-- yifeihu/TFT-ID-1.0
-- mradermacher/Llama-3-70b-Arimas-story-RP-V2.0-i1-GGUF
-tags:
-- finance
-- code
-- moe
-- legal
-- merge
-datasets:
-- cfahlgren1/react-code-instructions
-- nebius/SWE-agent-trajectories
-- JanosAudran/financial-reports-sec
-- TokenBender/code_instructions_122k_alpaca_style
-- O1-OPEN/OpenO1-SFT
-- imperial-cpg/copyright-traps-extra-non-members
-- maddyrucos/code_vulnerability_python
-- cmu-lti/agents_vs_script
-- generative-technologies/synth-ehr-icd10-llama3-format
-- MU-NLPC/Calc-ape210k_selftrain_experiment_balanced
-- ergotts/propositional-logic
-- ieeeeeH/TrafficDataSetExtraction
-- Lajavaness/IEEE-118-overload-test
-- sentence-transformers/embedding-training-data
-- orivera2280/Robocryst-GNN-data
-- rishi1entirerbb/inswapper_128.onnx
-metrics:
-- code_eval
-- accuracy
-new_version: 9x25dillon/IMPS-SQL-DS-FEMTO-R1C
-library_name: adapter-transformers
----
-```bash
-# Base requirements
-pip install torch==2.1.0 --index-url https://download.pytorch.org/whl/cu118
-pip install deepseek-ai-tools>=1.2.0 transformers==4.33.0
+# Unified LIMPS - Language-Integrated Matrix Processing System
 
-# GPU acceleration
-conda install -y -c "nvidia/label/cuda-12.2.0" cuda-toolkit
-pip install flash-attn==2.3.3
-```
+A comprehensive, integrated system combining polynomial operations, matrix processing, entropy analysis, and AI model integration.
+
+## Architecture Overview
+
+The Unified LIMPS system is organized into the following modules:
+
+### Core Components
+
+- **limps_core/**: Core LIMPS system with Julia and Python integration
+- **matrix_ops/**: Matrix processing and optimization engines  
+- **polynomial_system/**: Polynomial operations and analysis
+- **entropy_analysis/**: Entropy processing and analysis engines
+- **models/**: AI/ML model integration (DeepSeek, transformers)
+
+### Interfaces & APIs
+
+- **interfaces/**: Client interfaces for Julia and Python integration
+- **data/**: Data processing and validation utilities
+- **utils/**: Monitoring, testing, and benchmarking tools
+
+## Quick Start
+
+1. **Setup Environment**:
+   ```bash
+   source config/environments/limps.env
+   pip install -r requirements.txt
+   ```
+
+2. **Start Julia Server**:
+   ```bash
+   julia limps_core/julia/LIMPS.jl
+   ```
+
+3. **Run Integrated Workflow**:
+   ```bash
+   python main.py --mode workflow --gpu
+   ```
+
+## Workflow Integration
+
+The system provides a cohesive workflow through the `LIMPSWorkflow` class:
+
 ```python
-from deepseek import MatrixProcessor, SQLGenerator
+from limps_core.python.limps_workflow import LIMPSWorkflow
 
-processor = MatrixProcessor.from_pretrained("DeepSeek-AI/IMPS-SQL-DS-FEMTO-R1C")
-sql_engine = SQLGenerator(processor)
+# Initialize integrated workflow
+workflow = LIMPSWorkflow(use_gpu=True)
 
-# Convert natural language to optimized SQL
-result = sql_engine.generate(
-    "Show monthly sales totals for electronics category",
-    context="""
-        Tables: 
-        - sales (id, category, amount, date)
-        - categories (id, name)
-    """,
-    precision="float32",
-    use_gpu=True
-)
-```yamlenvironment:
-  matrix:
-  - julia_version: 1.0
-  - julia_version: latest
-
-platform:
-  - x86 # 32-bit
-  - x64 # 64-bit
-
-## uncomment the following lines to allow failures on nightly julia
-## (tests will run but not make your overall status red)
-matrix:
- allow_failures:
- - julia_version: latest
-
-branches:
-  only:
-    - master
-    - /release-.*/
-
-notifications:
-  - provider: Email
-    on_build_success: false
-    on_build_failure: false
-    on_build_status_changed: false
-
-install:
-  - ps: iex ((new-object net.webclient).DownloadString("https://raw.githubusercontent.com/JuliaCI/Appveyor.jl/version-1/bin/install.ps1"))
-
-build_script:
-  - echo "%JL_BUILD_SCRIPT%"
-  - C:\julia\bin\julia -e "%JL_BUILD_SCRIPT%"
-
-test_script:
-  - echo "%JL_TEST_SCRIPT%"
-  - C:\julia\bin\julia -e "%JL_TEST_SCRIPT%"
-# metrics.yaml
-task: text2sql
-dataset: Spider
-metrics:
-  - name: Execution Accuracy
-    value: 82.1%
-  - name: Latency
-    value: 320ms
+# Run comprehensive demonstration
+workflow.run_comprehensive_demo()
 ```
 
-print(result.sql_query)
-# OUTPUT: 
-# SELECT DATE_TRUNC('month', s.date) AS month, 
-#        SUM(s.amount) AS total_sales
-# FROM sales s
-# JOIN categories c ON s.category = c.id
-# WHERE c.name = 'electronics'
-# GROUP BY month
+## Features
+
+- **GPU-Accelerated Matrix Operations**: CUDA-optimized matrix processing
+- **Polynomial Analysis**: Symbolic polynomial operations via Julia
+- **Entropy Processing**: Advanced entropy analysis and optimization
+- **AI Model Integration**: DeepSeek and transformer model support
+- **Cross-Language Interop**: Seamless Python-Julia integration
+- **Comprehensive Testing**: Unit, integration, and performance tests
+
+## Configuration
+
+Configuration is managed through:
+- `config/project.toml`: Main project configuration
+- `config/environments/limps.env`: Environment variables
+- Component-specific configs in respective modules
+
+## Directory Structure
+
 ```
-Dataset | Rows | Domain | License
---------|------|--------|--------
-/storage/692A-D9E0/SQL-STRUCTURED | 2.1M | Structured SQL | Apache 2.0
-/storage/692A-D9E0/QUERY-PAIRS | 18M | NL-to-SQL pairs | CC-BY-SA 4.0
-/storage/692A-D9E0/SCHEMA-MATRICES | 4.3M | Database schemas | MIT
-Benchmark | Accuracy | Speed (qps) | Memory (GB)
-----------|----------|-------------|------------
-Spider | 82.1% | 12.4 | 24.3
-WikiSQL | 91.7% | 18.2 | 19.8
-CHASE | 78.3% | 9.8 | 27.1
-**Matrix Sparsity Optimization**
-```python
-processor.optimize(
-    sparsity_threshold=0.65,
-    quantization="int8",
-    cache_strategy="LRU"
-)
+unified-limps/
+├── limps_core/           # Core LIMPS system
+│   ├── julia/           # Julia modules and API
+│   └── python/          # Python workflow integration
+├── matrix_ops/          # Matrix processing
+├── polynomial_system/   # Polynomial operations  
+├── entropy_analysis/    # Entropy processing
+├── models/              # AI/ML models
+├── interfaces/          # Client interfaces
+├── data/                # Data processing
+├── utils/               # Utilities and tools
+├── tests/               # Comprehensive tests
+├── config/              # Configuration files
+└── deployment/          # Deployment configs
 ```
-**Hybrid Precision Training**
-```python
-from deepseek import configure_engine
 
-configure_engine(
-    mixed_precision="bf16",
-    memory_optimization_level=3,
-    flash_attention=True
-)
-```
-## Model Architecture
+## Contributing
 
-![Architecture Diagram](architecture.png)
-
-## Ethical Considerations
-**Intended Use:**  
-- SQL query generation
-- Database schema optimization
-- Query performance analysis
-
-**Limitations:**
-- Requires explicit schema definitions
-- Limited to ANSI SQL-2023 standard
-- Maximum 8-table joins
-
-## Environmental Impact
-
-**Training Configuration:**
-- 32×A100 80GB GPUs
-- 48 hours training time
-- Carbon Emissions: 412 kg CO2eq
-- ## Citation
-
-```bibtex
-@misc{deepseek2023imps,
-  title={IMPS-SQL: Intelligent Matrix Processing System for SQL Optimization}, 
-  author={DeepSeek AI Team},
-  year={2023},
-  publisher={HuggingFace},
-  url={https://huggingface.co/DeepSeek-AI/IMPS-SQL-DS-FEMTO-R1C}
-}
-```
+See `CONTRIBUTING.md` for development guidelines.
 
 ## License
 
-MIT License 
-Model card CC-BY-4.0
+Apache 2.0 License - see `LICENSE` file.
